@@ -1,0 +1,22 @@
+[package]
+name = "ashdl"
+version = "0.1.0"
+edition = "2021"
+
+# Authors And Information
+authors = [ "Ashrit Yarava <ashdragon95@gmail.com>" ]
+readme = "README.md"
+homepage = "https://github.com/Ashrit-Yarava/ashdl"
+repository = "https://github.com/Ashrit-Yarava/ashdl"
+description = "Another spotify playlist downloader."
+
+# License
+license = "MIT"
+
+# Keywords
+keywords = [ "spotify", "music", "ashdl", "downloader", "playlist" ]
+categories = [ "multimedia::audio" ]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
