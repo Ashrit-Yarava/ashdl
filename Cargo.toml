@@ -1,6 +1,6 @@
 [package]
 name = "ashdl"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 
 # Authors And Information
@@ -22,6 +22,9 @@ categories = [ "multimedia::audio" ]
 [dependencies]
 clap = { version = "3.1.6", features = ["derive"] }
 aspotify = "0.7.1"
+rspotify = { version = "0.11.5", features = ["client-reqwest", "reqwest-native-tls"] }
+futures = "0.3.21"
+futures-util = "0.3.21"
 rayon = "1.5"
 id3 = "1.0.2"
 reqwest = "0.11.10"

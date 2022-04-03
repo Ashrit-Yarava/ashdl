@@ -25,7 +25,7 @@ async fn main() {
 
         if !Path::new(&file_name).exists() {
             youtube::download_song(yt_dlp, format!{"{}", song}, file_name);
-            block_on(utils::tag::generate_id3_tag(song));  
+            block_on(utils::tag::generate_id3_tag(song));
             println!("+ {}", song_name.green());
         } else {
             println!("- {}", song_name.red());
