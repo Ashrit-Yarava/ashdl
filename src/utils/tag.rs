@@ -8,9 +8,8 @@ async fn get_image(image_url: String) -> Vec<u8> {
     return image.to_vec();
 }
 
-pub async fn generate_id3_tag(song: Song) {
+pub async fn generate_id3_tag(song: Song, file_name: String) {
     let mut tag = Tag::new();
-    let song_name = format!("{}.mp3", song);
     let album_name = song.album.to_string();
     tag.set_title(song.title);
     tag.set_album(song.album);
@@ -21,5 +20,5 @@ pub async fn generate_id3_tag(song: Song) {
         description: album_name,
         data: get_image(song.img).await,
     });
-    tag.write_to_path(song_name, Version::Id3v24).expect("Failed to write id3");
+    tag.write_to_path(file_name, Version::Id3v24).expect("Failed to write id3");
 }
