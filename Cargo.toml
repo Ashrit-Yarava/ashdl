@@ -21,3 +21,13 @@ categories = [ "multimedia::audio" ]
 
 [dependencies]
 clap = { version = "3.1.6", features = ["derive"] }
+aspotify = "0.7.1"
+rayon = "1.5"
+id3 = "1.0.2"
+reqwest = "0.11.10"
+image = "0.24.1"
+colored = "2.0.0"
+
+[dependencies.async-std]
+version = "1.6"
+features = ["attributes", "tokio1"]
