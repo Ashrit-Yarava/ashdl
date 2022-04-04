@@ -15,8 +15,8 @@ async fn main() {
     println!("Beginning Playlist Download...");
     let songs = spotify::get_playlist(client_id, client_secret, playlist_id).await;
     songs.into_par_iter().for_each(|song| {
-        let song_name = format!("{}", song).replace("/", "");
-        let s_name = format!("{}", song).replace("/", "");
+        let song_name = format!("{}", song).replace("/", "|");
+        let s_name = format!("{}", song).replace("/", "|");
         let file_name = format!("{}.mp3", song_name);
         let f_name = format!("{}.mp3", song_name);
 
