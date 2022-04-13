@@ -15,10 +15,18 @@ async fn main() {
     println!("Beginning Playlist Download...");
     let songs = spotify::get_playlist(client_id, client_secret, playlist_id).await;
     songs.into_par_iter().for_each(|song| {
-        let song_name = format!("{}", song).replace("/", "|");
-        let s_name = format!("{}", song).replace("/", "|");
-        let file_name = format!("{}.mp3", song_name).replace(|c: char| !c.is_ascii(), "");
-        let f_name = format!("{}.mp3", song_name);
+        let song_name = format!("{}", song).replace("/", "");
+        let s_name = format!("{}", song).replace("/", "");
+        let file_name_temp = format!("{}.mp3", song_name);
+        let file_name = file_name_temp
+            .chars()
+            .filter(|c| c.is_ascii())
+            .collect::<String>();
+        let f_name_temp = format!("{}.mp3", song_name);
+        let f_name = f_name_temp
+            .chars()
+            .filter(|c| c.is_ascii())
+            .collect::<String>();
 
         if !Path::new(&file_name).exists() {
             youtube::download_song(yt_dlp, s_name, file_name);
