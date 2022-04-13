@@ -15,17 +15,17 @@ async fn main() {
     println!("Beginning Playlist Download...");
     let songs = spotify::get_playlist(client_id, client_secret, playlist_id).await;
     songs.into_par_iter().for_each(|song| {
-        let song_name = format!("{}", song).replace("/", "");
-        let s_name = format!("{}", song).replace("/", "");
+        let song_name = format!("{}", song);
+        let s_name = format!("{}", song);
         let file_name_temp = format!("{}.mp3", song_name);
         let file_name = file_name_temp
             .chars()
-            .filter(|c| c.is_ascii())
+            .filter(|c| c.is_alphanumeric() || *c == ' ' || *c == '.')
             .collect::<String>();
         let f_name_temp = format!("{}.mp3", song_name);
         let f_name = f_name_temp
             .chars()
-            .filter(|c| c.is_ascii())
+            .filter(|c| c.is_alphanumeric() || *c == ' ' || *c == '.')
             .collect::<String>();
 
         if !Path::new(&file_name).exists() {
