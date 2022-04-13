@@ -2,10 +2,10 @@ mod spotify;
 mod utils;
 mod youtube;
 
-use rayon::iter::{IntoParallelIterator, ParallelIterator};
-use std::path::Path;
 use async_std::task::block_on;
 use colored::*;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use std::path::Path;
 
 #[async_std::main]
 async fn main() {
@@ -17,7 +17,7 @@ async fn main() {
     songs.into_par_iter().for_each(|song| {
         let song_name = format!("{}", song).replace("/", "|");
         let s_name = format!("{}", song).replace("/", "|");
-        let file_name = format!("{}.mp3", song_name);
+        let file_name = format!("{}.mp3", song_name).replace(|c: char| !c.is_ascii(), "");
         let f_name = format!("{}.mp3", song_name);
 
         if !Path::new(&file_name).exists() {

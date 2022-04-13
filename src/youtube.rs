@@ -10,7 +10,7 @@ fn download_command(yt_dlp: &str, search_query: String, file_name: String) {
             "1",
             "--default-search",
             "https://music.youtube.com/search?q=",
-            &*format!("\"{}\"", search_query),
+            &*format!("\"{} (Lyrics)\"", search_query),
             "-o",
             &file_name,
         ])
