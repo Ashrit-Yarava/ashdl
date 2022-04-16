@@ -21,7 +21,6 @@ categories = ["multimedia::audio"]
 
 [dependencies]
 clap = { version = "3.1.6", features = ["derive"] }
-aspotify = "0.7.1"
 rspotify = { version = "0.11.5", features = [
   "client-reqwest",
   "reqwest-native-tls",

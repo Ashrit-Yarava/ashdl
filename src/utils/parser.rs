@@ -1,73 +1,44 @@
-use clap::Parser;
-use std::process;
+use std::path::Path;
 
-#[derive(Parser, Debug)]
-#[clap(author, version, about, long_about = None)]
-struct Args {
-    #[clap(short, long)]
-    ytdlp: Option<String>,
+use clap::{arg, ArgMatches, Command};
 
-    #[clap(short, long)]
-    client: Option<String>,
+use crate::utils::run;
 
-    #[clap(short, long)]
-    secret: Option<String>,
-
-    // The playlist to get the songs from.
-    playlist_id: Option<String>,
+pub fn get_parser() -> ArgMatches {
+    let command = Command::new("ashdl")
+        .arg_required_else_help(true)
+        .disable_version_flag(true)
+        .arg(arg!(-v - -verbose))
+        .arg(arg!(-y - -ytdlp <VALUE>))
+        .arg(arg!(-i - -clientid <VALUE>))
+        .arg(arg!(-s - -clientsecret <VALUE>))
+        .arg(arg!([ID]))
+        .get_matches();
+    return command;
 }
 
-fn error_playlist_id() -> &'static str {
-    println!("Playlist ID is invalid");
-    return "";
-}
-
-fn error_client_id() -> &'static str {
-    println!("Client ID is required!");
-    return "";
-}
-
-fn error_client_secret() -> &'static str {
-    println!("Client Secret is required!");
-    return "";
-}
-
-fn error_yt_path() -> &'static str {
-    println!("Specify yt-dlp path!");
-    return "";
-}
-
-pub fn parse() -> (String, String, String, String) {
-    let args = Args::parse();
-
-    let yt_dlp = match args.ytdlp.as_deref() {
-        Some(x) => x,
-        None => error_yt_path(),
-    };
-
-    let client_id = match args.client.as_deref() {
-        Some(x) => x,
-        None => error_client_id(),
-    };
-
-    let client_secret = match args.secret.as_deref() {
-        Some(x) => x,
-        None => error_client_secret(),
-    };
-
-    let playlist_id = match args.playlist_id.as_deref() {
-        Some(x) => x,
-        None => error_playlist_id(),
-    };
-
-    if (yt_dlp == "") || (client_id == "") || (client_secret == "") || (playlist_id == "") {
-        process::exit(1);
+pub fn parse_args() -> (bool, String, String, String, String) {
+    let command = get_parser();
+    if !Path::new(command.value_of("ytdlp").unwrap()).exists() {
+        run::error("YT-DLP not found.", 5);
     }
-
     return (
-        yt_dlp.to_string(),
-        client_id.to_string(),
-        client_secret.to_string(),
-        playlist_id.to_string(),
+        command.is_present("verbose"),
+        command.value_of("ytdlp").unwrap().to_string(),
+        command.value_of("clientid").unwrap().to_string(),
+        command.value_of("clientsecret").unwrap().to_string(),
+        command.value_of("ID").unwrap().to_string(),
     );
 }
+
+pub fn print_parser_details() {
+    let parser = get_parser();
+    println!("YT-DLP: {}", parser.value_of("ytdlp").unwrap());
+    println!("Client Id: {}", parser.value_of("clientid").unwrap());
+    println!(
+        "Client Secret: {}",
+        parser.value_of("clientsecret").unwrap()
+    );
+    println!("Playlist Id: {}", parser.value_of("ID").unwrap());
+}
+
