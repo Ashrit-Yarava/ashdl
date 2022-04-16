@@ -2,38 +2,32 @@ mod spotify;
 mod utils;
 mod youtube;
 
-use async_std::task::block_on;
-use colored::*;
-use rayon::iter::{IntoParallelIterator, ParallelIterator};
-use std::path::Path;
-
 #[async_std::main]
 async fn main() {
-    let (yt_dlp_str, client_id, client_secret, playlist_id) = utils::parser::parse();
-    let yt_dlp = &yt_dlp_str;
+    // Parser functions.
+    let (verbose, dlp, sid, ssecret, id) = utils::parser::parse_args();
 
-    println!("Beginning Playlist Download...");
-    let songs = spotify::get_playlist(client_id, client_secret, playlist_id).await;
-    songs.into_par_iter().for_each(|song| {
-        let song_name = format!("{}", song);
-        let s_name = format!("{}", song);
-        let file_name_temp = format!("{}.mp3", song_name);
-        let file_name = file_name_temp
-            .chars()
-            .filter(|c| c.is_alphanumeric() || *c == ' ' || *c == '.')
-            .collect::<String>();
-        let f_name_temp = format!("{}.mp3", song_name);
-        let f_name = f_name_temp
-            .chars()
-            .filter(|c| c.is_alphanumeric() || *c == ' ' || *c == '.')
-            .collect::<String>();
+    if verbose {
+        // Program functions.
+        utils::screen::clear_screen();
+        utils::screen::print_banner();
 
-        if !Path::new(&file_name).exists() {
-            youtube::download_song(yt_dlp, s_name, file_name);
-            block_on(utils::tag::generate_id3_tag(song, f_name));
-            println!("+ {}", song_name.green());
-        } else {
-            println!("- {}", song_name.red());
-        }
-    })
+        // Parser Details
+        println!("\nProgram Arguments:");
+        utils::parser::print_parser_details();
+    }
+
+    // Spotify functions.
+    let playlist_items = spotify::playlist::get_playlist_items(sid, ssecret, id).await;
+
+    if verbose {
+        println!("\nPlaylist Items:");
+        spotify::song::print_songs(&playlist_items);
+    }
+
+    // Download songs.
+    if verbose {
+        println!("\nSong download:");
+    }
+    youtube::download::download_songs(verbose, dlp, playlist_items).await;
 }

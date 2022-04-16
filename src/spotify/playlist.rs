@@ -1,51 +1,46 @@
-use rspotify::ClientCredsSpotify;
-use futures::stream::TryStreamExt;
-use futures_util::pin_mut;
-use rspotify::clients::BaseClient;
-use rspotify::model::{FullTrack, Id, PlaylistId, PlayableItem};
+use crate::spotify::client;
+use crate::spotify::song::Song;
+use crate::utils::run;
+use futures::pin_mut;
+use futures_util::TryStreamExt;
+use rspotify::model::{PlayableItem, PlaylistId};
+use rspotify::prelude::{BaseClient, Id};
+use std::process::exit;
+use crate::utils::run::error;
 
-use crate::spotify::Song;
-
-fn generate_blank() -> Song {
-    return Song {
-        title: "".to_string(),
-        artists: vec![],
-        album: "".to_string(),
-        img: "".to_string()
-    }
-}
-
-// NEED TO CHANGE
-fn make_song(track: FullTrack) -> Song {
-    let artists = track.artists;
-    let image = track.album.images[0].url.to_string();
-    let album_name = track.album.name;
-    let mut str_artists: Vec<String> = vec![];
-    for artist in artists.iter() {
-        str_artists.push(artist.to_owned().name);
-    }
-    return Song {
-        title: track.name,
-        artists: str_artists,
-        album: album_name,
-        img: image
-    }
-}
-
-pub async fn songs(client: ClientCredsSpotify, playlist_id: String) -> Vec<Song> {
-    let id = PlaylistId::from_id(&playlist_id).unwrap();
-    let playlist = client.playlist_items(&id, Option::from(""), None);
-    pin_mut!(playlist);
+/// Converts a playlist into a vector of Song structs.
+pub async fn get_playlist_items(client_id: String, client_secret: String, id: String) -> Vec<Song> {
     let mut songs: Vec<Song> = vec![];
-    while let Some(item) = playlist.try_next().await.unwrap() {
-        let song = match item.track.unwrap() {
-            PlayableItem::Track(s) => make_song(s),
-            PlayableItem::Episode(_s) => generate_blank(),
+    let cli = client::get_client(client_id, client_secret).await;
+
+    let r_id = match PlaylistId::from_id(&*id) {
+        Ok(r) => r,
+        Err(..) => {
+            run::error("Invalid playlist id.", 2);
+            exit(2);
+        }
+    };
+
+    // Checks that the playlist is valid.
+    let playlist_check = cli.playlist(&r_id, Option::from(""), None).await;
+    match playlist_check {
+        Ok(..) => {}
+        Err(_) => error("Invalid Playlist Id.", 2),
+    }
+
+
+    let items = cli.playlist_items(&r_id, Option::from(""), None);
+    pin_mut!(items);
+
+    while let Some(item) = items.try_next().await.unwrap() {
+        let track: Song = match item.track.unwrap() {
+            PlayableItem::Track(t) => Song::new(t).await,
+            PlayableItem::Episode(..) => Song::blank(),
         };
-        if song.title != "" {
-            songs.push(song);
+        if track.title != "" {
+            songs.push(track);
         }
     }
     return songs;
-
 }
+
