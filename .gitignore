@@ -2,3 +2,4 @@
 .idea
 *.mp3
 .fseventsd
+.DS_Store
