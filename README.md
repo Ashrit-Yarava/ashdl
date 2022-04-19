@@ -2,12 +2,16 @@
 ---
 > Another spotify playlist downloader.
 
-## Structure
+A straightforward application that downloads a spotify playlist into the current directory.
 
-### Command-Line Arguments
+## External Dependencies:
 
-```
-ashdl -o/--output=(DIRECTORY)(Default: 0) [PLAYLIST-LINK]
-```
+1. YT-DLP/Youtube-DL
+2. FFMPEG
+3. Spotify API Access
 
+Youtube DL path needs to be specified. (Prevent PATH conflicts.)
 
+## Notes/Warnings
+
+* Haven't gotten the chance to test the application on a private playlist so idk what'll happen there.
