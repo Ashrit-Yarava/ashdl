@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use clap::{arg, ArgMatches, Command};
+use clap::{arg, Arg, ArgMatches, Command};
 
 use crate::utils::run;
 
@@ -8,11 +8,35 @@ pub fn get_parser() -> ArgMatches {
     let command = Command::new("ashdl")
         .arg_required_else_help(true)
         .disable_version_flag(true)
-        .arg(arg!(-v - -verbose))
-        .arg(arg!(-y - -ytdlp <VALUE>))
-        .arg(arg!(-i - -clientid <VALUE>))
-        .arg(arg!(-s - -clientsecret <VALUE>))
-        .arg(arg!([ID]))
+        .arg(
+            Arg::new("verbose")
+                .long("verbose")
+                .short('v')
+                .takes_value(false)
+                .help("Display verbose output."),
+        )
+        .arg(
+            Arg::new("ytdlp")
+                .long("ytdlp")
+                .short('y')
+                .takes_value(true)
+                .help("YT DLP Path."),
+        )
+        .arg(
+            Arg::new("clientid")
+                .long("clientid")
+                .short('i')
+                .takes_value(true)
+                .help("Client ID from Spotify API."),
+        )
+        .arg(
+            Arg::new("clientsecret")
+                .long("clientsecret")
+                .short('s')
+                .takes_value(true)
+                .help("Client Secret from Spotify API."),
+        )
+        .arg(arg!([ID]).help("Playlist ID. (NOT THE URL)"))
         .get_matches();
     return command;
 }
@@ -41,4 +65,3 @@ pub fn print_parser_details() {
     );
     println!("Playlist Id: {}", parser.value_of("ID").unwrap());
 }
-
