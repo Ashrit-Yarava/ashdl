@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Testing (SC)" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+    <option name="command" value="run -- --soundcloud -y /opt/homebrew/bin/yt-dlp -i d71ab1f0e4e04d82963a873e36214e2a -s 03fa7076a47f4df7825b6dd264b83a6f -v 2rT75JT0vzgYj5CTqbfBFA" />
+    <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+    <option name="channel" value="DEFAULT" />
+    <option name="requiredFeatures" value="true" />
+    <option name="allFeatures" value="false" />
+    <option name="emulateTerminal" value="false" />
+    <option name="withSudo" value="false" />
+    <option name="backtrace" value="SHORT" />
+    <envs />
+    <option name="isRedirectInput" value="false" />
+    <option name="redirectInputPath" value="" />
+    <method v="2">
+      <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
+    </method>
+  </configuration>
+</component>

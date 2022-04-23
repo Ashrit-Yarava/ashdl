@@ -11,29 +11,27 @@ fn download_command_youtube(yt_dlp: &str, song: &Song) {
     let _command = Command::new(yt_dlp)
         .args([
             "-x",
-            "-f",
-            "bestaudio",
+            "--audio-quality",
+            "0",
             "--audio-format",
             "mp3",
             "--playlist-items",
             "1",
             "--default-search",
             "https://music.youtube.com/search?q=",
-            "scsearch:",
             &song.get_query(),
             "-o",
             &song.get_filename(),
         ])
-        .output()
-        .expect("yt-dlp download failed.");
+        .output().expect("YT-DLP failed to download.");
 }
 
 fn download_command_soundcloud(yt_dlp: &str, song: &Song) {
     let _command = Command::new(yt_dlp)
         .args([
             "-x",
-            "-f",
-            "bestaudio",
+            "--audio-quality",
+            "0",
             "--audio-format",
             "mp3",
             "--playlist-items",

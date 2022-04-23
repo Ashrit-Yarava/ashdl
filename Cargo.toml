@@ -1,6 +1,6 @@
 [package]
 name = "ashdl"
-version = "0.2.2"
+version = "0.2.3"
 edition = "2021"
 
 # Authors And Information
@@ -36,4 +36,3 @@ colored = "2.0.0"
 [dependencies.async-std]
 version = "1.6"
 features = ["attributes", "tokio1"]
-
