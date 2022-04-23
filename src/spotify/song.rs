@@ -21,7 +21,7 @@ impl Song {
     }
 
     pub fn get_query(&self) -> String {
-        return format!("{} (Lyrics)", self);
+        return format!("{}", self);
     }
 
     /// Clean up the title and generate a filename.

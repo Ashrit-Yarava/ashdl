@@ -5,7 +5,7 @@ mod youtube;
 #[async_std::main]
 async fn main() {
     // Parser functions.
-    let (verbose, dlp, sid, ssecret, id) = utils::parser::parse_args();
+    let (verbose, soundcloud, dlp, sid, ssecret, id) = utils::parser::parse_args();
 
     if verbose {
         // Program functions.
@@ -29,5 +29,5 @@ async fn main() {
     if verbose {
         println!("\nSong download:");
     }
-    youtube::download::download_songs(verbose, dlp, playlist_items).await;
+    youtube::download::download_songs(verbose, dlp, playlist_items, soundcloud).await;
 }

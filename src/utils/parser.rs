@@ -36,18 +36,26 @@ pub fn get_parser() -> ArgMatches {
                 .takes_value(true)
                 .help("Client Secret from Spotify API."),
         )
+        .arg(
+            Arg::new("soundcloud")
+                .long("soundcloud")
+                .short('c')
+                .takes_value(false)
+                .help("Whether to use soundcloud instead of youtube music.")
+        )
         .arg(arg!([ID]).help("Playlist ID. (NOT THE URL)"))
         .get_matches();
     return command;
 }
 
-pub fn parse_args() -> (bool, String, String, String, String) {
+pub fn parse_args() -> (bool, bool, String, String, String, String) {
     let command = get_parser();
     if !Path::new(command.value_of("ytdlp").unwrap()).exists() {
         run::error("YT-DLP not found.", 5);
     }
     return (
         command.is_present("verbose"),
+        command.is_present("soundcloud"),
         command.value_of("ytdlp").unwrap().to_string(),
         command.value_of("clientid").unwrap().to_string(),
         command.value_of("clientsecret").unwrap().to_string(),
@@ -57,6 +65,9 @@ pub fn parse_args() -> (bool, String, String, String, String) {
 
 pub fn print_parser_details() {
     let parser = get_parser();
+    println!("Use Soundcloud: {}",
+             parser.is_present("soundcloud")
+    );
     println!("YT-DLP: {}", parser.value_of("ytdlp").unwrap());
     println!("Client Id: {}", parser.value_of("clientid").unwrap());
     println!(
