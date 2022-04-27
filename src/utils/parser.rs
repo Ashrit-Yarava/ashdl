@@ -43,15 +43,21 @@ pub fn get_parser() -> ArgMatches {
                 .takes_value(false)
                 .help("Whether to use soundcloud instead of youtube music.")
         )
+        .arg(arg!([TYPE]).help("Type of Spotify Object [playlist/album]"))
         .arg(arg!([ID]).help("Playlist ID. (NOT THE URL)"))
         .get_matches();
     return command;
 }
 
-pub fn parse_args() -> (bool, bool, String, String, String, String) {
+pub fn parse_args() -> (bool, bool, String, String, String, String, String) {
     let command = get_parser();
     if !Path::new(command.value_of("ytdlp").unwrap()).exists() {
         run::error("YT-DLP not found.", 5);
+    }
+    let spotify_type = command.value_of("TYPE").unwrap().to_string();
+
+    if spotify_type != "playlist" && spotify_type != "album" {
+        run::error("Invalid type for spotify id.", 10);
     }
     return (
         command.is_present("verbose"),
@@ -59,6 +65,7 @@ pub fn parse_args() -> (bool, bool, String, String, String, String) {
         command.value_of("ytdlp").unwrap().to_string(),
         command.value_of("clientid").unwrap().to_string(),
         command.value_of("clientsecret").unwrap().to_string(),
+        spotify_type,
         command.value_of("ID").unwrap().to_string(),
     );
 }

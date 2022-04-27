@@ -5,7 +5,7 @@ mod youtube;
 #[async_std::main]
 async fn main() {
     // Parser functions.
-    let (verbose, soundcloud, dlp, sid, ssecret, id) = utils::parser::parse_args();
+    let (verbose, soundcloud, dlp, sid, ssecret, stype, id) = utils::parser::parse_args();
 
     if verbose {
         // Program functions.
@@ -18,16 +18,24 @@ async fn main() {
     }
 
     // Spotify functions.
-    let playlist_items = spotify::playlist::get_playlist_items(sid, ssecret, id).await;
+
+    let mut spotify_items: Vec<spotify::song::Song> = vec![];
+
+    if stype == "playlist" {
+        spotify_items = spotify::playlist::get_playlist_items(sid, ssecret, id).await;
+    } else if stype == "album" {
+        spotify_items = spotify::album::get_album_items(sid, ssecret, id).await;
+    }
 
     if verbose {
-        println!("\nPlaylist Items:");
-        spotify::song::print_songs(&playlist_items);
+        println!("\nItems:");
+        spotify::song::print_songs(&spotify_items);
     }
 
     // Download songs.
     if verbose {
         println!("\nSong download:");
     }
-    youtube::download::download_songs(verbose, dlp, playlist_items, soundcloud).await;
+    youtube::download::download_songs(verbose, dlp, spotify_items, soundcloud).await;
+
 }

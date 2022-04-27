@@ -26,7 +26,7 @@ impl Song {
 
     /// Clean up the title and generate a filename.
     pub fn get_filename(&self) -> String {
-        let mut title = format!("{}.mp3", self.title);
+        let mut title = format!("{} - {}.mp3", self.artists_str(), self.title);
         // Reserved Characters: ?:\"*|/\\<>
         // These characters give problems for android.
         title = title
@@ -48,6 +48,10 @@ impl Song {
             title = title.replace("  ", " ");
         }
         title = title.replace(" .", "."); // If the song name ends with a quote.
+
+        while title.starts_with(".") {
+            title = title[1..].parse().unwrap();
+        }
 
         return title;
     }
