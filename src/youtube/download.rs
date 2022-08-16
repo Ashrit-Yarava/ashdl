@@ -1,5 +1,5 @@
-use std::{path::Path, process::Command};
 use futures::executor::block_on;
+use std::{path::Path, process::Command};
 
 use crate::spotify::song::Song;
 use crate::spotify::tag::generate_id3_tag;
@@ -18,12 +18,13 @@ fn download_command_youtube(yt_dlp: &str, song: &Song) {
             "--playlist-items",
             "1",
             "--default-search",
-            "https://music.youtube.com/search?q=",
+            "ytsearch",
             &song.get_query(),
             "-o",
             &song.get_filename(),
         ])
-        .output().expect("YT-DLP failed to download.");
+        .output()
+        .expect("YT-DLP failed to download.");
 }
 
 fn download_command_soundcloud(yt_dlp: &str, song: &Song) {
